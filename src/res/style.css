@@ -1,0 +1,60 @@
+#gridPane .button {
+    -fx-text-fill: green;
+    -fx-font-size: 16px;
+}
+
+#closeBtn.button {
+    -fx-text-fill: red;
+}
+
+
+
+
+#nameRegion {
+	-fx-padding: 10;
+	-fx-border-style: solid inside;
+	-fx-border-width: 2;
+	-fx-border-insets: 5;
+	-fx-border-radius: 5;
+	-fx-border-color: green;
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+
+}
+
+#login_view {
+	-fx-padding: 10;
+	-fx-border-style: solid inside;
+	-fx-border-width: 2;
+	-fx-border-insets: 5;
+	-fx-border-radius: 5;
+	-fx-border-color: green;
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+
+}
+
+#nameRegion .button {
+    -fx-text-fill: black;
+    -fx-background-color: white;
+
+    -fx-font-size: 10px;
+}
+.accordion {
+	-fx-padding: 20;
+	-fx-border-style: solid inside;
+	-fx-border-width: 1;
+	-fx-border-insets: 2;
+	-fx-border-radius: 5;
+	-fx-border-color: gray;
+}
+.accordion > .titled-pane > .title {
+ 	//-fx-background-color: burlywood;
+      
+}
+ 
+ 
+.accordion > .first-titled-pane > .title {
+    	//-fx-background-color: derive(red, 80%); 
+ 	//-fx-background-insets: 1;
+}
