@@ -5,8 +5,6 @@
  */
 package multikino;
 
-import javafx.beans.binding.When;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -15,15 +13,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import multikino.helper.BuyTicketButtonTableCell;
-import multikino.helper.FilmTableUtil;
+import multikino.helper.SeansFilmowyTableUtil;
 
 /**
  *
- * @author 
+ * Klasa widoku dla zakładki Repertuar
  */
 public class RepertuarView extends VBox {
 
+    TableColumn actionCol = new TableColumn("Bilety");
     public RepertuarView() {
         layoutForm();
     }
@@ -62,44 +60,32 @@ public class RepertuarView extends VBox {
          
         public TitledPane getRepertuarPane() {
                 StackPane pane = new StackPane();
-                TableView<Film> tabela = new TableView<>(FilmTableUtil.getFilmList());
-                TableColumn<Film, String> filmCol = new TableColumn<>("Film");
-                filmCol.getColumns().addAll(FilmTableUtil.getTitleColumn(), 
-                        FilmTableUtil.getDirectorColumn(),
-                        FilmTableUtil.getActorsColumn(),
-                        FilmTableUtil.getYearColumn(),
-                        FilmTableUtil.getPEGIColumn());
+                TableView<SeansFilmowy> tabela = new TableView<>(SeansFilmowyTableUtil.getFilmList());
+                TableColumn<SeansFilmowy, String> filmCol = new TableColumn<>("Film");
+                filmCol.getColumns().addAll(SeansFilmowyTableUtil.getTitleColumn(), 
+                        SeansFilmowyTableUtil.getCzasTrwaniaColumn(),
+                        SeansFilmowyTableUtil.getDirectorColumn(),
+                        SeansFilmowyTableUtil.getActorsColumn(),
+                        SeansFilmowyTableUtil.getYearColumn(),
+                        SeansFilmowyTableUtil.getPEGIColumn());
                 
                 
-                TableColumn actionCol = new TableColumn("Zakup");
+                
                 actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-                actionCol.setCellFactory(BuyTicketButtonTableCell.<Film>forTableColumn("Kup bilet", (Film f) -> {
-                    //tabela.getItems().remove(f);
-                    
-                    return f;
-                }));     
-
-                tabela.getColumns().addAll(FilmTableUtil.getIdColumn(),
+                actionCol.setMinWidth(80);
+                
+                tabela.getColumns().addAll(SeansFilmowyTableUtil.getGodzinaColumn(),
+                        SeansFilmowyTableUtil.getSalaColumn(),
+                        SeansFilmowyTableUtil.getCenaColumn(),
                         filmCol, actionCol );
 
                 tabela.setPlaceholder(new Label("Brak filmów."));
-                tabela.placeholderProperty().bind(
-                    new When(new SimpleIntegerProperty(0)
-                                 .isEqualTo(tabela.getVisibleLeafColumns().size()))
-                            .then(new When(new SimpleIntegerProperty(0)
-                                              .isEqualTo(tabela.getItems().size()))
-                                      .then(new Label("No columns and data exist."))
-                                      .otherwise(new Label("No columns exist.")))
-                            .otherwise(new When(new SimpleIntegerProperty(0)
-                                           .isEqualTo(tabela.getItems().size()))
-                                           .then(new Label("Brak filmów."))
-                                           .otherwise((Label)null))
-                );
+                
                 
                 pane.getChildren().add(tabela);
                 tabela.positionInArea(pane, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, Insets.EMPTY, HPos.CENTER, VPos.CENTER, true);
-                TitledPane phonePane = new TitledPane("Aktualnie grane", pane);
-                return phonePane;
+                TitledPane repertuarPane = new TitledPane("Aktualnie grane", pane);
+                return repertuarPane;
         }
 
 }

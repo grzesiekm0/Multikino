@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 /**
  *
- * @author 
+ * Klasa widoku dla panelu Logowania 
  */
 public class LogowanieView extends GridPane {
 

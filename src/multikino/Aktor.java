@@ -17,10 +17,15 @@ import javafx.beans.property.StringProperty;
  */
 public class Aktor implements Dane {
 
+    public static int ID = 1;
     private final StringProperty sImie = new SimpleStringProperty();
     private final StringProperty sNazwisko = new SimpleStringProperty();
     private final ReadOnlyIntegerWrapper id = new ReadOnlyIntegerWrapper();
     private List<Film> filmyList = new LinkedList<Film>();
+
+    Aktor() {
+        id.set(ID++);
+    }
 
     public int getId() {
         return id.get();
@@ -81,7 +86,7 @@ public class Aktor implements Dane {
 
     @Override
     public String toString() {
-        return sImie + " "+sNazwisko;
+        return sImie.get() + " "+sNazwisko.get();
     }
     
 }

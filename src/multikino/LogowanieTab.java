@@ -10,7 +10,7 @@ import javafx.scene.control.Tab;
 
 /**
  *
- * @author 
+ * Zakładka logowania
  */
 public class LogowanieTab extends Tab {
 

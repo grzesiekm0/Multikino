@@ -46,7 +46,7 @@ public class RejestracjaView extends GridPane {
 
          
         // Buttons
-        Button saveBtn = new Button("Zapisz");
+        Button saveBtn = new Button("Zarejestruj");
         Button cleanBtn = new Button("Wyczyść");
  
         // Date format
@@ -59,7 +59,6 @@ public class RejestracjaView extends GridPane {
                 this.dateFormat = "dd.MM.yyyy";
                 layoutForm();
                 initFieldData();
-                bindFieldsToModel();
         }
  
         /**
@@ -114,15 +113,7 @@ public class RejestracjaView extends GridPane {
                 txtData.setPromptText(dateFormat.toLowerCase());
         }
  
-        /**
-         * Wypełnia pola kontrolek domyślnymi danymi modelowymi
-         * Wiąże pola w obu kierunkach
-         */
-        public void bindFieldsToModel() {
-                txtWidzId.textProperty().bind(model.widzIdProperty().asString());
-                txtImie.textProperty().bindBidirectional(model.firstNameProperty());
-                txtNazwisko.textProperty().bindBidirectional(model.lastNameProperty());
-        }
+ 
  
         /**
          * Wypełnia pole daty domyślną wartośią daty.

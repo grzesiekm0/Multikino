@@ -39,6 +39,42 @@ public class Multikino extends Application {
     private Text helpText = new Text();
         @Override
         public void start(Stage stage) {
+/*
+                TextField fName = new TextField();
+                TextField lName = new TextField();
+ 
+                Button closeBtn = new Button("Close");
+                closeBtn.setOnAction(e -> Platform.exit());
+                
+                fName.getProperties().put("toolTipText", "Podaj imie");
+                lName.getProperties().put("toolTipText", "Podaj nazwisko");
+ 
+                helpText.setManaged(false);
+                helpText.setTextOrigin(VPos.TOP);
+                helpText.setFill(Color.DARKGREEN);
+                helpText.setFont(Font.font(null, 10));
+                helpText.setMouseTransparent(true);
+                 
+                GridPane root = new GridPane();
+                
+                root.setId("gridPane");
+                Label labName = new Label("imie:");
+                root.add(labName, 1, 1);
+                root.add(fName, 2, 1);
+                root.setRowSpan(labName, 3);
+                root.add(new Label("nazwisko:"), 1, 3);
+                root.add(lName, 2, 3);
+ 
+                
+                root.add(helpText, 4, 4);
+                
+                root.add(testBtn, 2, 5);
+                root.add(closeBtn, 2, 6);
+                closeBtn.setId("closeBtn");
+                labName.setOnMouseClicked(mouseEventHandler);
+                fName.setOnKeyTyped( e -> handleNumbers(e));
+                
+*/
 
                 TabPane tabPane = new TabPane();
                 //wyłączamy możliwość zamykania zakładek
@@ -46,8 +82,15 @@ public class Multikino extends Application {
                 RejestracjaTab rejestracjaTab = new RejestracjaTab();
                 LogowanieTab logowanieTab = new LogowanieTab();
                 RepertuarTab repertuarTab = new RepertuarTab();
+                DodajFilmTab dodajFilmTab = new DodajFilmTab();
+                DodajSeansTab dodajSeansTab = new DodajSeansTab();
+  
                 
-                tabPane.getTabs().addAll(logowanieTab, rejestracjaTab, repertuarTab);
+                 
+                tabPane.getTabs().addAll(dodajSeansTab, dodajFilmTab, logowanieTab, rejestracjaTab, repertuarTab);
+                
+                
+                
                 BorderPane root1 = new BorderPane();
                 root1.setCenter(tabPane);
                 root1.setStyle("-fx-padding: 10;" +
@@ -58,20 +101,20 @@ public class Multikino extends Application {
                               "-fx-border-color: blue;");
 
                 // dodaje tooltip gdy fokus pada na dane pole
-                Scene scene = new Scene(root1, 800, 600);
-                 scene.focusOwnerProperty().addListener(
-                        (ObservableValue<? extends Node> value, Node oldNode, Node newNode)
-                                -> focusChanged(value, oldNode, newNode));
+                Scene scene = new Scene(root1, 900, 600);
+//                 scene.focusOwnerProperty().addListener(
+//                        (ObservableValue<? extends Node> value, Node oldNode, Node newNode)
+//                                -> focusChanged(value, oldNode, newNode));
                 scene.getStylesheets().add("res/style.css");
  
                 stage.setScene(scene);
-                stage.setTitle("Showing Micro Help");
+                stage.setTitle("Multikino");
                 stage.show();
-                
-                
                 WidzPresenter wp = new WidzPresenter(rejestracjaTab.model, rejestracjaTab.view);
-                EventHandler<MouseEvent> mouseEventHandler =
-                    e -> System.out.println("Mouse event type: " + e.getEventType());
+                FilmPresenter fp = new FilmPresenter(dodajFilmTab.view);
+                RepertuarPresenter rp = new RepertuarPresenter(repertuarTab.view);
+                SeansPresenter sp = new SeansPresenter(dodajSeansTab.view);
+                 
         }
         
         public void handle(KeyEvent e) {
@@ -179,15 +222,15 @@ class ShowAndWaitApp  {
        
        
        protected void showAlert() {
-                        Stage s = new Stage(StageStyle.UTILITY);
-                        //s.initModality(Modality.WINDOW_MODAL);
-                         
-                        Label msgLabel = new Label("This is an FX alert!");
-                        Group root = new Group(msgLabel);
-                        Scene scene = new Scene(root);
-                        s.setScene(scene);
-                         
-                        s.setTitle("FX Alert");
-                        s.show();
+            Stage s = new Stage(StageStyle.UTILITY);
+            //s.initModality(Modality.WINDOW_MODAL);
+
+            Label msgLabel = new Label("This is an FX alert!");
+            Group root = new Group(msgLabel);
+            Scene scene = new Scene(root);
+            s.setScene(scene);
+
+            s.setTitle("FX Alert");
+            s.show();
         }
 }

@@ -11,14 +11,15 @@ import javafx.scene.layout.GridPane;
 
 /**
  *
- * @author 
+ * Zakładka tepertuaru
  */
 public class RepertuarTab extends Tab {
+    RepertuarView view;
     public RepertuarTab() {
             super();
             setText("Repertuar");
-            Node root = new RepertuarView();
-
+            view = new RepertuarView();
+            Node root = view;
             setContent(root);
             setClosable(false);
 

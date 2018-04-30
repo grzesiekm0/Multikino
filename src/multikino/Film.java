@@ -5,6 +5,7 @@
  */
 package multikino;
 
+import java.time.LocalTime;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -22,9 +23,14 @@ import javafx.collections.ObservableSet;
 
 /**
  * Klasa film mapuje wszystkie pozycje z tabelki bazy danych (lub innego źródła) film
- * @author 
+ *  
  */
 public class Film implements Dane{
+
+    public static int ID = 1;
+    Film() {
+        this.id.set(ID++);
+    }
 
     public enum PEGI {
         G(0),
@@ -84,7 +90,21 @@ public class Film implements Dane{
     private final IntegerProperty rokProdukcji = new SimpleIntegerProperty();
     private final ObjectProperty<PEGI> pegi = new SimpleObjectProperty<>();
     private final SetProperty<Aktor> aktorzyList = new SimpleSetProperty<>();
+    private final ObjectProperty<LocalTime> czasTrwania = new SimpleObjectProperty<>();
 
+    public LocalTime getCzasTrwania() {
+        return czasTrwania.get();
+    }
+
+    public void setCzasTrwania(LocalTime value) {
+        czasTrwania.set(value);
+    }
+
+    public ObjectProperty czasTrwaniaProperty() {
+        return czasTrwania;
+    }
+    
+    
     public ObservableSet getAktorzyList() {
         return aktorzyList.get();
     }
@@ -95,13 +115,14 @@ public class Film implements Dane{
 
     public SetProperty aktorzyListProperty() {
         return aktorzyList;
-    }    public PEGI getPegi() {
+    }    
+    public PEGI getPegi() {
         return pegi.get();
     }
 
-    public ReadOnlyObjectProperty pegiProperty() {
-        return pegi;
-    }
+        public ReadOnlyObjectProperty pegiProperty() {
+            return pegi;
+        }
     
 
     public int getRokProdukcji() {
