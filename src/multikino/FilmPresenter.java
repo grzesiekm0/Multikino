@@ -7,6 +7,8 @@ package multikino;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import multikino.Film.PEGI;
+import multikino.helper.FilmTableUtil;
 
 /**
  *
@@ -71,11 +73,16 @@ public class FilmPresenter {
                     model.addActor(a);
                 }
                 model.setCzasTrwania(czas);
+                
+                model.setPegi(PEGI.getPeg(view.cbPegi.getSelectionModel().getSelectedIndex()));
+                
+                FilmTableUtil.getFilmList().add(model);
                 view.cleanAllFields();
                 //TODO:
                 //zapisz model w bazie
                 //i powołaj nowy model
-                reBindFieldsToModel(new Film());
+                model = new Film();
+                reBindFieldsToModel(model);
         }
     
 }

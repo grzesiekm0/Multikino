@@ -24,48 +24,56 @@ import multikino.SeansFilmowy;
  * Klasa pomocnicza ułatwia budowę tabelki z filmami
  */
 public class FilmTableUtil {
- public static ObservableList<Film> getFilmList() {
-                Film p1 = new Film(Film.PEGI.R, 1);
-                LocalTime lt = LocalTime.of(1 ,33);
-                p1.setCzasTrwania(lt);
-                
-                p1.setsTytul("Alien");
-                p1.setsRezyser("Stanley Cubric");
-                p1.setRokProdukcji(1979);
-                Aktor a1 = new Aktor(1);
-                a1.setsImie("Tom");
-                a1.setsNazwisko("Hanks");
 
-                Aktor a2 = new Aktor(2);
-                a2.setsImie("Meryl");
-                a2.setsNazwisko("Streep");
+    private static ObservableList<Film> lista = null;
+    public static ObservableList<Film> getFilmList() {
+        if(lista == null)
+        {
+            lista = FXCollections.<Film>observableArrayList();
 
-                Aktor a3 = new Aktor(2);
-                a3.setsImie("Sigourney");
-                a3.setsNazwisko("Weaver");
-                
-                Film p2 = new Film(Film.PEGI.PG13, 2);
-                p2.setsTytul("Post");
-                p2.setsRezyser("Spilberg");
-                p2.setRokProdukcji(2017);
-                
-                p2.setCzasTrwania(LocalTime.of(1 ,43));
-                Film p3 = new Film(Film.PEGI.PG, 3);
-                p3.setCzasTrwania(LocalTime.of(2 ,15));
+            Film p1 = new Film(Film.PEGI.R, 1);
+            LocalTime lt = LocalTime.of(1 ,33);
+            p1.setCzasTrwania(lt);
+
+            p1.setsTytul("Alien");
+            p1.setsRezyser("Stanley Cubric");
+            p1.setRokProdukcji(1979);
+            Aktor a1 = new Aktor(1);
+            a1.setsImie("Tom");
+            a1.setsNazwisko("Hanks");
+
+            Aktor a2 = new Aktor(2);
+            a2.setsImie("Meryl");
+            a2.setsNazwisko("Streep");
+
+            Aktor a3 = new Aktor(2);
+            a3.setsImie("Sigourney");
+            a3.setsNazwisko("Weaver");
+
+            Film p2 = new Film(Film.PEGI.PG13, 2);
+            p2.setsTytul("Post");
+            p2.setsRezyser("Spilberg");
+            p2.setRokProdukcji(2017);
+
+            p2.setCzasTrwania(LocalTime.of(1 ,43));
+            Film p3 = new Film(Film.PEGI.PG, 3);
+            p3.setCzasTrwania(LocalTime.of(2 ,15));
 //                Film p4 = new Film(PEGI.PG, 4);
 //                Film p5 = new Film(PEGI.PG, 5);
 
-                a3.addFilm(p1);
+            a3.addFilm(p1);
 
-                a1.addFilm(p2);
-                a2.addFilm(p2);
+            a1.addFilm(p2);
+            a2.addFilm(p2);
+
+            p1.addActor(a3);
+            p2.addActor(a1).addActor(a2);
+            Sala s1 = new Sala(1,300, Sala.Typ.DWA_DE);
+            Sala s2 = new Sala(2,200, Sala.Typ.TRZY_DE);
+            lista.addAll(p1, p3,  p2);
+        }
                 
-                p1.addActor(a3);
-                p2.addActor(a1).addActor(a2);
-                Sala s1 = new Sala(1,300, Sala.Typ.DWA_DE);
-                Sala s2 = new Sala(2,200, Sala.Typ.TRZY_DE);
-                
-                return FXCollections.<Film>observableArrayList(p1, p3,  p2);
+        return lista;
         }  
        public static TableColumn<Film, Integer> getIdColumn() {
                 TableColumn<Film, Integer> IdCol = new TableColumn<>("Film Id");

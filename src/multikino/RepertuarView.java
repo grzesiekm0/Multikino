@@ -22,6 +22,7 @@ import multikino.helper.SeansFilmowyTableUtil;
 public class RepertuarView extends VBox {
 
     TableColumn actionCol = new TableColumn("Bilety");
+    TableView<SeansFilmowy> tabela = new TableView<>(SeansFilmowyTableUtil.getSeansList());
     public RepertuarView() {
         layoutForm();
     }
@@ -60,7 +61,7 @@ public class RepertuarView extends VBox {
          
         public TitledPane getRepertuarPane() {
                 StackPane pane = new StackPane();
-                TableView<SeansFilmowy> tabela = new TableView<>(SeansFilmowyTableUtil.getFilmList());
+                
                 TableColumn<SeansFilmowy, String> filmCol = new TableColumn<>("Film");
                 filmCol.getColumns().addAll(SeansFilmowyTableUtil.getTitleColumn(), 
                         SeansFilmowyTableUtil.getCzasTrwaniaColumn(),

@@ -20,38 +20,43 @@ import multikino.SeansFilmowy;
  * Klasa pomocnicza w budowie tabelki dodającej aktorów do filmu
  */
 public class ActorTableUtil {
-          public static ObservableList<Aktor> getActorList() {
-                Aktor a1 = new Aktor(1);
-                a1.setsImie("Tom");
-                a1.setsNazwisko("Hanks");
+    private static ObservableList<Aktor> lista = null;
+    public static ObservableList<Aktor> getActorList() {
+        if(lista == null)
+        {
+          lista = FXCollections.<Aktor>observableArrayList();
+          Aktor a1 = new Aktor(1);
+          a1.setsImie("Tom");
+          a1.setsNazwisko("Hanks");
 
-                Aktor a2 = new Aktor(2);
-                a2.setsImie("Meryl");
-                a2.setsNazwisko("Streep");
+          Aktor a2 = new Aktor(2);
+          a2.setsImie("Meryl");
+          a2.setsNazwisko("Streep");
 
-                Aktor a3 = new Aktor(2);
-                a3.setsImie("Sigourney");
-                a3.setsNazwisko("Weaver");
-                
-                return FXCollections.<Aktor>observableArrayList(a1, a3,  a2);
+          Aktor a3 = new Aktor(2);
+          a3.setsImie("Sigourney");
+          a3.setsNazwisko("Weaver");
+          lista.addAll(a1, a3,  a2);
         }
-           public static TableColumn<Aktor, Integer> getIdColumn() {
-                TableColumn<Aktor, Integer> IdCol = new TableColumn<>("id");
-                IdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-                IdCol.setMinWidth(20);
-                return IdCol;
-        }       
-        public static TableColumn<Aktor, String> getImieColumn() {
-                TableColumn<Aktor, String> imieCol = new TableColumn<>("Imię");
-                imieCol.setCellValueFactory(new PropertyValueFactory<>("sImie"));
-                imieCol.setMinWidth(100);
-                return imieCol;
-        }
+        return lista;
+    }
+    public static TableColumn<Aktor, Integer> getIdColumn() {
+          TableColumn<Aktor, Integer> IdCol = new TableColumn<>("id");
+          IdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+          IdCol.setMinWidth(20);
+          return IdCol;
+    }       
+    public static TableColumn<Aktor, String> getImieColumn() {
+            TableColumn<Aktor, String> imieCol = new TableColumn<>("Imię");
+            imieCol.setCellValueFactory(new PropertyValueFactory<>("sImie"));
+            imieCol.setMinWidth(100);
+            return imieCol;
+    }
 
-        public static TableColumn<Aktor, String> getNazwiskoColumn() {
-                TableColumn<Aktor, String> imieCol = new TableColumn<>("Nazwisko");
-                imieCol.setCellValueFactory(new PropertyValueFactory<>("sNazwisko"));
-                imieCol.setMinWidth(100);
-                return imieCol;
-        }
+    public static TableColumn<Aktor, String> getNazwiskoColumn() {
+            TableColumn<Aktor, String> imieCol = new TableColumn<>("Nazwisko");
+            imieCol.setCellValueFactory(new PropertyValueFactory<>("sNazwisko"));
+            imieCol.setMinWidth(100);
+            return imieCol;
+    }
 }

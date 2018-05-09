@@ -6,6 +6,7 @@
 package multikino;
 
 import java.util.function.UnaryOperator;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -14,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import multikino.helper.ActorTableUtil;
+import multikino.helper.SeansFilmowyTableUtil;
 
 /**
  * Klasa reprezentująca widok zakładki dodaj Film tylko dla personelu
@@ -234,6 +236,7 @@ public class DodajFilmView extends GridPane {
                 paneActor.add(tabela,0,3,3,1);
                 tabela.positionInArea(paneActor, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, Insets.EMPTY, HPos.CENTER, VPos.CENTER, true);                
                 this.add(paneActor, 4, 1,2,9);
+                
         }
         void cleanAllFields() {
             txtTytul.setText("");
@@ -249,6 +252,7 @@ public class DodajFilmView extends GridPane {
             for ( int i = 0; i<tabela.getItems().size(); i++) {
                 tabela.getItems().clear();
             }
+            
         }
   
 }

@@ -5,6 +5,7 @@
  */
 package multikino;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -13,6 +14,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.HPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -26,8 +28,10 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Window;
+import javafx.util.StringConverter;
 import jdk.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
 import multikino.helper.BuyTicketButtonTableCell;
+import multikino.helper.SeansFilmowyTableUtil;
 import org.omg.CORBA.FloatHolder;
 
 /**
@@ -49,7 +53,7 @@ public class RepertuarPresenter {
     private final FloatProperty multi = new SimpleFloatProperty();
     private final FloatProperty totalPrice = new SimpleFloatProperty();
     private final FloatProperty cena = new SimpleFloatProperty();
-
+    private NumberBinding op;
     public float getCena() {
         return cena.get();
     }
@@ -103,8 +107,19 @@ public class RepertuarPresenter {
          * Wiąże pola w obu kierunkach
          */
         private void bindFieldsToModel() {
-            //view.txtFilmId.textProperty().bind(model.idProperty().asString());
-        }
+                //wiąże zawartość repertuaru ze zmianami w liście
+               SeansFilmowyTableUtil.getSeansList().addListener(new ListChangeListener<SeansFilmowy>(){
+                    @Override
+                    public void onChanged(ListChangeListener.Change<? extends SeansFilmowy> c) {
+                       while (c.next()) 
+                            if (c.wasAdded()) 
+                                for(SeansFilmowy sf : c.getAddedSubList()) {
+                                    //TODO: dodaj do bazy danych
+                                }
+                        view.tabela.setItems(SeansFilmowyTableUtil.getSeansList());
+                    }
+                });
+       }
         /**
          * Wypełnia pola kontrolek domyślnymi danymi modelowymi
          * Wiąże pola w obu kierunkach
@@ -127,19 +142,49 @@ public class RepertuarPresenter {
             multi.set(1.0f);
             ticketNo.set(1);
             cena.set(10.0f);
-            NumberBinding op = cena.multiply(ticketNo.multiply(multi));
-            totalPrice.bind( op);
+            op = cena.multiply(ticketNo.multiply(multi));
+            
+            
+            
             
             //totalPrice.multiply(multi);
         }
+        
+            
         void buyTicket() {
             view.actionCol.setCellFactory(BuyTicketButtonTableCell.<SeansFilmowy>forTableColumn("Kup bilet", (SeansFilmowy sf) -> {
                 view.actionCol.setId("btnKup");
-                
+                    
+                StringConverter<Float> sc = new StringConverter<Float>() {
+                        @Override
+                        public String toString(Float object) {
+                            if (object != null)
+                            {
+                                String str = new DecimalFormat("#.00").format(object.floatValue());
+                                return str;
+                            }
+                                
+                            else
+                                return null;
+                        }
+
+                        @Override
+                        public Float fromString(String string) {
+                            Float d = Float.parseFloat(string);
+                            totalPrice.setValue( ((float)Math.round(d)));
+                            return d;
+                        }
+                    };
+            
                 List<String> errorList = new ArrayList<String>(10);
                    cena.set(sf.getPrice());
+                   NumberBinding nb = op.multiply(sf.getSala().typ.val());
+                   
+                   totalPrice.bind( nb.add(sf.getSala().okulary3DProperty()) );
+                   
                     if(!sf.buyTicketTest(errorList))
                     {
+                        
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Błąd zakupu biletu");
                         alert.setHeaderText("Nie ma już możliwości zakupu biletu.");
@@ -210,7 +255,7 @@ public class RepertuarPresenter {
                             ticketNo.set( Integer.parseInt(newValue) );
                         });//textProperty().bindBidirectional(ticketNo.asString());
                         
-                        txtTotalPrice.textProperty().bind(totalPrice.asString());
+                        txtTotalPrice.textProperty().bindBidirectional(totalPrice.asObject(),sc);
                         
                         Button btBuy = new Button("Kup");
                         btBuy.setOnAction( e->{
