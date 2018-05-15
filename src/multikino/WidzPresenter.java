@@ -13,7 +13,9 @@ import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -27,15 +29,38 @@ import javafx.stage.StageStyle;
  * @author 
  */
 public class WidzPresenter {
-        private final Widz model;
+        private Widz model;
         private final RejestracjaView view;
          
         public WidzPresenter(Widz model, RejestracjaView view) {
                 this.model = model;
                 this.view = view;
                 attachEvents();
+                bindFieldsToModel();
         }
- 
+        
+        /**
+         * Wypełnia pola kontrolek domyślnymi danymi modelowymi
+         * Wiąże pola w obu kierunkach
+         */
+        public void bindFieldsToModel() {
+                view.txtWidzId.textProperty().bind(model.widzIdProperty().asString());
+                view.txtImie.textProperty().bindBidirectional(model.firstNameProperty());
+                view.txtNazwisko.textProperty().bindBidirectional(model.lastNameProperty());
+        }
+        /**
+         * Wypełnia pola kontrolek domyślnymi danymi modelowymi
+         * Wiąże pola w obu kierunkach
+         */
+        public void reBindFieldsToModel(Widz _model) {
+                
+                view.txtWidzId.textProperty().unbind();
+                view.txtImie.textProperty().unbindBidirectional(model.firstNameProperty());
+                view.txtNazwisko.textProperty().unbindBidirectional(model.lastNameProperty());
+                this.model = _model;
+        }
+                
+        
         /**
          *  Wiąże zdarzenia widoku z modelem Widz
          */
@@ -113,31 +138,21 @@ public class WidzPresenter {
         }
          
         public void showError(List<String> errorList) {
-                String msg = "";
-                if (errorList.isEmpty()) {
-                        msg = "Brak komunikatu o błędzie.";
-                } else {
-                        for (String s : errorList) {
-                                msg = msg + s + "\n";
-                        }
-                }
- 
-                Label msgLbl = new Label(msg);
-                Button okBtn = new Button("OK");
-                VBox root = new VBox(new StackPane(msgLbl), new StackPane(okBtn));
-                root.setSpacing(10);
- 
-                Scene scene = new Scene(root);
-                Stage stage = new Stage(StageStyle.UTILITY);
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.initOwner(view.getScene().getWindow());
- 
-                okBtn.setOnAction(e -> stage.close());
-  
-                stage.setTitle("Error");
-                stage.sizeToScene();
-                stage.showAndWait();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Błąd rejestracji");
+                alert.setHeaderText("Rejestracja zakończyła się niepowodzeniem.");
+                String msg = "Brak dodatkowych informacji o błędzie.";
+                if(errorList.size() > 0)
+                    msg = "";
+                for(String s : errorList)
+                    msg += s+"\n";
+                alert.setContentText(msg);
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("OK.");
+                    }
+                });
         }
 }
  

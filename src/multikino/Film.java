@@ -5,6 +5,7 @@
  */
 package multikino;
 
+import java.time.LocalTime;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -22,9 +23,19 @@ import javafx.collections.ObservableSet;
 
 /**
  * Klasa film mapuje wszystkie pozycje z tabelki bazy danych (lub innego źródła) film
- * @author 
+ *  
  */
 public class Film implements Dane{
+
+    public static int ID = 1;
+    Film() {
+        this.id.set(ID++);
+    }
+
+    void setPegi(PEGI pegi) {
+        
+        this.pegi.set(pegi);
+    }
 
     public enum PEGI {
         G(0),
@@ -37,7 +48,22 @@ public class Film implements Dane{
         PEGI(int pg) {
             peg = pg;
         }
-        
+        public static PEGI getPeg(int peg) {
+            switch(peg) {
+                case 0:
+                    return PEGI.G;
+                case 1:
+                    return PEGI.PG;
+                case 2:
+                    return PEGI.PG13;
+                case 3:
+                    return PEGI.R;
+                case 4:
+                    return PEGI.N17;                
+                default:
+                    return PEGI.R;            
+            }
+        }
         @Override
         public String toString() {
             String str = "";
@@ -84,7 +110,21 @@ public class Film implements Dane{
     private final IntegerProperty rokProdukcji = new SimpleIntegerProperty();
     private final ObjectProperty<PEGI> pegi = new SimpleObjectProperty<>();
     private final SetProperty<Aktor> aktorzyList = new SimpleSetProperty<>();
+    private final ObjectProperty<LocalTime> czasTrwania = new SimpleObjectProperty<>();
 
+    public LocalTime getCzasTrwania() {
+        return czasTrwania.get();
+    }
+
+    public void setCzasTrwania(LocalTime value) {
+        czasTrwania.set(value);
+    }
+
+    public ObjectProperty czasTrwaniaProperty() {
+        return czasTrwania;
+    }
+    
+    
     public ObservableSet getAktorzyList() {
         return aktorzyList.get();
     }
@@ -95,13 +135,14 @@ public class Film implements Dane{
 
     public SetProperty aktorzyListProperty() {
         return aktorzyList;
-    }    public PEGI getPegi() {
+    }    
+    public PEGI getPegi() {
         return pegi.get();
     }
 
-    public ReadOnlyObjectProperty pegiProperty() {
-        return pegi;
-    }
+        public ReadOnlyObjectProperty pegiProperty() {
+            return pegi;
+        }
     
 
     public int getRokProdukcji() {

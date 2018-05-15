@@ -10,7 +10,7 @@ import javafx.scene.control.Tab;
 
 /**
  *
- * @author 
+ *  Zakładka rejestracji widza 
  */
 public class RejestracjaTab extends Tab {
 
