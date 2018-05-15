@@ -12,10 +12,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import javafx.collections.ListChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import multikino.helper.FilmTableUtil;
 import multikino.helper.SeansFilmowyTableUtil;
 
 /**
@@ -39,17 +39,6 @@ public class SeansPresenter {
                 view.saveBtn.setOnAction(value -> { 
                     saveData();
                 });
-                FilmTableUtil.getFilmList().addListener(new ListChangeListener<Film> () {
-                    @Override
-                    public void onChanged(ListChangeListener.Change<? extends Film> c) {
-                        while (c.next()) 
-                            if (c.wasAdded()) 
-                                for(Film film : c.getAddedSubList()) {
-                                    //TODO: dodaj do bazy danych
-                                }
-                        view.tabelaFilm.setItems(FilmTableUtil.getFilmList());
-                    }
-                });
         }
         /**
          * Wypełnia pola kontrolek domyślnymi danymi modelowymi
@@ -59,7 +48,7 @@ public class SeansPresenter {
                 
                 //view.txtFilmId.textProperty().unbind();
                 this.model = _model;
-                //bindFieldsToModel();
+                bindFieldsToModel();
         }      
     
     
@@ -114,13 +103,11 @@ public class SeansPresenter {
                 errorList.add("Źle sformatowana godzina rozpoczecia.");
             }
             
-            
             if(errorList.size() > 0)
                 showError(errorList);
             else {
                 //TODO: dodaj model seansu do bazy danych
-                SeansFilmowyTableUtil.getSeansList().add(model);
-                model = new SeansFilmowy();
+                SeansFilmowyTableUtil.getFilmList().add(model);
             }
             
         }

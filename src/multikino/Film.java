@@ -32,11 +32,6 @@ public class Film implements Dane{
         this.id.set(ID++);
     }
 
-    void setPegi(PEGI pegi) {
-        
-        this.pegi.set(pegi);
-    }
-
     public enum PEGI {
         G(0),
         PG(2),
@@ -48,22 +43,7 @@ public class Film implements Dane{
         PEGI(int pg) {
             peg = pg;
         }
-        public static PEGI getPeg(int peg) {
-            switch(peg) {
-                case 0:
-                    return PEGI.G;
-                case 1:
-                    return PEGI.PG;
-                case 2:
-                    return PEGI.PG13;
-                case 3:
-                    return PEGI.R;
-                case 4:
-                    return PEGI.N17;                
-                default:
-                    return PEGI.R;            
-            }
-        }
+        
         @Override
         public String toString() {
             String str = "";

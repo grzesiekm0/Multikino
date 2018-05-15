@@ -8,14 +8,12 @@ package multikino;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -55,21 +53,7 @@ public class Sala {
     final public Typ typ;
     private final ReadOnlyIntegerWrapper seatCount = new ReadOnlyIntegerWrapper();
     private final StringProperty sala = new SimpleStringProperty();
-    private final FloatProperty okulary3D = new SimpleFloatProperty();
 
-    public float getOkulary3D() {
-        return okulary3D.get();
-    }
-
-    public void setOkulary3D(float value) {
-        okulary3D.set(value);
-    }
-
-    public FloatProperty okulary3DProperty() {
-        return okulary3D;
-    }
-
-    
     public String getSala() {
         return sala.get();
     }
@@ -112,11 +96,6 @@ public class Sala {
             seats[i] = 0;
         
         sala.set(typ.toString());
-        if(typ != Typ.DWA_DE) {
-            okulary3D.set(3.0f);
-        }
-        else
-            okulary3D.set(0.0f);
     }
     public List<Integer> getSeats(int nr, int widzId) {
         List<Integer> seatResv = new LinkedList<>();

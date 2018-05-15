@@ -13,12 +13,13 @@
 #nameRegion {
 	-fx-padding: 10;
 	-fx-border-style: solid inside;
-	-fx-border-width: 1;
+	-fx-border-width: 2;
 	-fx-border-insets: 5;
 	-fx-border-radius: 5;
-	-fx-border-color: darkgrey;
-        -fx-text-fill: red;
-        -fx-font-size: 12px;
+	-fx-border-color: green;
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+
 }
 
 #login_view {
@@ -56,33 +57,4 @@
 .accordion > .first-titled-pane > .title {
     	//-fx-background-color: derive(red, 80%); 
  	//-fx-background-insets: 1;
-}
-
-.table-cell {
-    -fx-alignment: CENTER;
-
-    -fx-skin: "com.sun.javafx.scene.control.skin.TableCellSkin";
-    -fx-padding: 5px;
-
-    -fx-background-color: transparent;
-    -fx-border-color: transparent -fx-table-cell-border-color transparent transparent;
-    -fx-border-width:  0px; 
-    -fx-cell-size:  25px; 
-    -fx-text-fill: -fx-text-inner-color;    
-}
-
-.table-row-cell:selected {
-   -fx-background-color: lightgray; 
-   -fx-text-fill: white;    
-}
-
-#actor_panel {
-	-fx-padding: 10;
-	-fx-border-style: solid inside;
-	-fx-border-width: 1;
-	-fx-border-insets: 5;
-	-fx-border-radius: 5;
-	-fx-border-color: darkgrey;
-        -fx-text-fill: red;
-        -fx-font-size: 11px;
 }
