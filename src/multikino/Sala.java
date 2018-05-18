@@ -26,6 +26,12 @@ import javafx.beans.property.StringProperty;
 
 public class Sala {
 
+
+    List<Bilet> reserveSeats(Widz value, SeansFilmowy sf, int ticketNo, float sum, int discIndex) {
+        sf.getSala().reserveSeats(ticketNo, sum, discIndex);
+
+    }
+
     public enum Typ {
         DWA_DE(1.0f),
         TRZY_DE(1.3f),

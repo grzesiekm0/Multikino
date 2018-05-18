@@ -63,8 +63,8 @@ public class LogowanieView extends GridPane {
                 // Disable the personId field
                 txtWidzId.setDisable(true);
  
-                txtLogin.setPromptText("twój login");
-                txtPass.setPromptText("hasło do serwisu kina");
+                txtLogin.setPromptText("wpisz id widza");
+                txtPass.setPromptText("wpisz nazwisko");
         }
     
 }

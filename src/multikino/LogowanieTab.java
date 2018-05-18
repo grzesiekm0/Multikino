@@ -14,12 +14,13 @@ import javafx.scene.control.Tab;
  */
 public class LogowanieTab extends Tab {
 
+    LogowanieView view;
     public LogowanieTab() {
         super();
         setText("Logowanie");
-        Node root = new LogowanieView();
-        
-        setContent(root);
+        view = new LogowanieView();
+
+        setContent(view);
         setClosable(false);
         
         

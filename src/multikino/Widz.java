@@ -16,16 +16,37 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import multikino.KartaWidza.Okres;
 
 /**
  *
- * @author 
+ * Klasa Widza/Pracownika
  */
 public class Widz implements Dane{
     
+        private KartaWidza kw = new KartaWidza(Okres.DNI30, LocalDate.now());   //null;
+
+        public KartaWidza getKw() {
+            return kw;
+        }
+
+        public void setKw(KartaWidza kw) {
+            this.kw = kw;
+        }
+    
+        public enum Rola {
+            WIDZ,
+            PRACOWNIK;
+        };
+        private Rola rola = Rola.WIDZ;
+
+        public Rola getRola() {
+            return rola;
+        }
+        
         public enum KategoriaWiekowa {NIEMOWLE, DZIECKO, NASTOLATEK, DOROSLY, SENIOR, BRAK };
  
-        private final ReadOnlyIntegerWrapper widzId =
+        private final ReadOnlyIntegerWrapper id =
                 new ReadOnlyIntegerWrapper(this, "widzId", ++widzSeq);
         private final StringProperty sImie =
                  new SimpleStringProperty(this, "firstName", null);
@@ -76,14 +97,23 @@ public class Widz implements Dane{
             this.sImie.set(firstName);
             this.sNazwisko.set(lastName);
             this.dataUr.set(birthDate);
+            
         }
- 
+
+        public Widz(String firstName, String lastName, LocalDate birthDate, Rola rola)
+        { 
+            this.sImie.set(firstName);
+            this.sNazwisko.set(lastName);
+            this.dataUr.set(birthDate);
+            this.rola = rola;
+        }
+
     /**
      * unikatowy obidentyfikator widza
      * @return
      */
     public final int getWidzId() {
-                return widzId.get();
+                return id.get();
         }
  
     /**
@@ -91,7 +121,7 @@ public class Widz implements Dane{
      * @return
      */
     public final ReadOnlyIntegerProperty widzIdProperty() {
-                return widzId.getReadOnlyProperty();
+                return id.getReadOnlyProperty();
         }
  
     /**
@@ -316,7 +346,7 @@ public class Widz implements Dane{
     }
     @Override
     public String toString() {
-        return "[ Id = " + widzId.get() +
+        return "[ Id = " + id.get() +
             ", imie = " + sImie.get() +
             ", nazwisko = " + sNazwisko.get() +
             ", data urodzenia = " + dataUr.get() + " ]";

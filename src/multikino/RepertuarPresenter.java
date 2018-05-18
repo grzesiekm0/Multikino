@@ -19,6 +19,7 @@ import javafx.geometry.HPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -29,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
+import javax.xml.ws.Holder;
 import jdk.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
 import multikino.helper.BuyTicketButtonTableCell;
 import multikino.helper.SeansFilmowyTableUtil;
@@ -41,11 +43,11 @@ import org.omg.CORBA.FloatHolder;
 public class RepertuarPresenter {
     
     final RepertuarView view;
-    
-    public RepertuarPresenter(RepertuarView view) {
+    Holder<Widz> widzHolder = null;
+    public RepertuarPresenter(RepertuarView view, Holder<Widz> widzHolder) {
     
         this.view = view;
-    
+        this.widzHolder = widzHolder;
         attachEvents();
         bindFieldsToModel();
     }
@@ -53,6 +55,7 @@ public class RepertuarPresenter {
     private final FloatProperty multi = new SimpleFloatProperty();
     private final FloatProperty totalPrice = new SimpleFloatProperty();
     private final FloatProperty cena = new SimpleFloatProperty();
+    private CheckBox chkKartaWidza = new CheckBox("użyj Karty Widza");
     private NumberBinding op;
     public float getCena() {
         return cena.get();
@@ -285,7 +288,9 @@ public class RepertuarPresenter {
                         content.add(cbDiscounts, 1, 1);
                         content.add(new Label("Suma (zł)"), 0, 2);
                         content.add(txtTotalPrice, 1, 2);
-                        
+                        //jeszcze 1 warunek KW nie używane w tym dniu
+                        if(widzHolder.value != null && widzHolder.value.getKw() != null)
+                            content.add(chkKartaWidza, 0, 3);
                         content.add(btBuy, 1, 3);
                         content.add(btCancel, 1, 4);
                         GridPane.setHalignment(btBuy, HPos.RIGHT);
@@ -364,7 +369,7 @@ public class RepertuarPresenter {
         return ticketNo;
     }
 
-    private void kupBilety(SeansFilmowy sf, int get, float get0, int selectedIndex) {
-        //TODO: połącz z bazą i wykonaj zamówienie dla konkretnego widza
+    private void kupBilety(SeansFilmowy sf, int ticketNo, float sum, int selectedIndex) {
+        
     }
 }

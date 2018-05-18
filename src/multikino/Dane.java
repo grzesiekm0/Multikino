@@ -7,8 +7,7 @@ package multikino;
 
 /**
  * Interfejs dziedziczony przez klasy z bazy danych Widz/Aktr/Film/Seans
- *  dla łatwiejszej implementacji metod CRUD Modelu Danch
- * @author 
+ *  dla łatwiejszej implementacji metod CRUD Modelu Bazy Danch
  */
 public interface Dane {
     

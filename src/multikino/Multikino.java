@@ -11,6 +11,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
@@ -30,33 +31,50 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.xml.ws.Holder;
+import multikino.Widz.Rola;
 
 /**
  *
  * @author 
  */
 public class Multikino extends Application {
-    private Text helpText = new Text();
+        private Text helpText = new Text();
+        //Holder<Widz> widzHolder = new Holder<>();
+    private final ObjectProperty<Holder<Widz>> widzHolder = new SimpleObjectProperty<>();
+
+    public Holder getWidzHolder() {
+        return widzHolder.get();
+    }
+
+    public void setWidzHolder(Holder value) {
+        widzHolder.set(value);
+    }
+
+    public ObjectProperty widzHolderProperty() {
+        return widzHolder;
+    }
+        
         @Override
         public void start(Stage stage) {
 /*
                 TextField fName = new TextField();
                 TextField lName = new TextField();
- 
+
                 Button closeBtn = new Button("Close");
                 closeBtn.setOnAction(e -> Platform.exit());
-                
+
                 fName.getProperties().put("toolTipText", "Podaj imie");
                 lName.getProperties().put("toolTipText", "Podaj nazwisko");
- 
+
                 helpText.setManaged(false);
                 helpText.setTextOrigin(VPos.TOP);
                 helpText.setFill(Color.DARKGREEN);
                 helpText.setFont(Font.font(null, 10));
                 helpText.setMouseTransparent(true);
-                 
+
                 GridPane root = new GridPane();
-                
+
                 root.setId("gridPane");
                 Label labName = new Label("imie:");
                 root.add(labName, 1, 1);
@@ -64,110 +82,120 @@ public class Multikino extends Application {
                 root.setRowSpan(labName, 3);
                 root.add(new Label("nazwisko:"), 1, 3);
                 root.add(lName, 2, 3);
- 
-                
+
+
                 root.add(helpText, 4, 4);
-                
+
                 root.add(testBtn, 2, 5);
                 root.add(closeBtn, 2, 6);
                 closeBtn.setId("closeBtn");
                 labName.setOnMouseClicked(mouseEventHandler);
                 fName.setOnKeyTyped( e -> handleNumbers(e));
-                
+
 */
 
-                TabPane tabPane = new TabPane();
-                //wyłączamy możliwość zamykania zakładek
-                tabPane.tabClosingPolicyProperty().set(TabPane.TabClosingPolicy.UNAVAILABLE);
-                RejestracjaTab rejestracjaTab = new RejestracjaTab();
-                LogowanieTab logowanieTab = new LogowanieTab();
-                RepertuarTab repertuarTab = new RepertuarTab();
-                DodajFilmTab dodajFilmTab = new DodajFilmTab();
-                DodajSeansTab dodajSeansTab = new DodajSeansTab();
-  
-                
-                 
-                tabPane.getTabs().addAll(dodajSeansTab, dodajFilmTab, logowanieTab, rejestracjaTab, repertuarTab);
-                
-                
-                
-                BorderPane root1 = new BorderPane();
-                root1.setCenter(tabPane);
-                root1.setStyle("-fx-padding: 10;" +
-                              "-fx-border-style: solid inside;" +
-                              "-fx-border-width: 2;" +
-                              "-fx-border-insets: 5;" +
-                              "-fx-border-radius: 5;" +
-                              "-fx-border-color: blue;");
+            setWidzHolder(new Holder<>());
+            TabPane tabPane = new TabPane();
+            //wyłączamy możliwość zamykania zakładek
+            tabPane.tabClosingPolicyProperty().set(TabPane.TabClosingPolicy.UNAVAILABLE);
+            RejestracjaTab rejestracjaTab = new RejestracjaTab();
+            LogowanieTab logowanieTab = new LogowanieTab();
+            RepertuarTab repertuarTab = new RepertuarTab();
+            DodajFilmTab dodajFilmTab = new DodajFilmTab();
+            DodajSeansTab dodajSeansTab = new DodajSeansTab();
 
-                // dodaje tooltip gdy fokus pada na dane pole
-                Scene scene = new Scene(root1, 900, 600);
+
+
+            tabPane.getTabs().addAll(logowanieTab, rejestracjaTab);
+            
+            
+
+
+            BorderPane root1 = new BorderPane();
+            root1.setCenter(tabPane);
+            root1.setStyle("-fx-padding: 10;" +
+                          "-fx-border-style: solid inside;" +
+                          "-fx-border-width: 2;" +
+                          "-fx-border-insets: 5;" +
+                          "-fx-border-radius: 5;" +
+                          "-fx-border-color: blue;");
+
+            // dodaje tooltip gdy fokus pada na dane pole
+            Scene scene = new Scene(root1, 900, 600);
 //                 scene.focusOwnerProperty().addListener(
 //                        (ObservableValue<? extends Node> value, Node oldNode, Node newNode)
 //                                -> focusChanged(value, oldNode, newNode));
-                scene.getStylesheets().add("res/style.css");
- 
-                stage.setScene(scene);
-                stage.setTitle("Multikino");
-                stage.show();
-                WidzPresenter wp = new WidzPresenter(rejestracjaTab.model, rejestracjaTab.view);
-                FilmPresenter fp = new FilmPresenter(dodajFilmTab.view);
-                RepertuarPresenter rp = new RepertuarPresenter(repertuarTab.view);
-                SeansPresenter sp = new SeansPresenter(dodajSeansTab.view);
-                 
-        }
+            scene.getStylesheets().add("res/style.css");
+
+            stage.setScene(scene);
+            stage.setTitle("Multikino");
+            stage.show();
+            RejestracjaPresenter wp = new RejestracjaPresenter(rejestracjaTab.model, rejestracjaTab.view, getWidzHolder());
+            FilmPresenter fp = new FilmPresenter(dodajFilmTab.view, getWidzHolder());
+            RepertuarPresenter rp = new RepertuarPresenter(repertuarTab.view, getWidzHolder());
+            SeansPresenter sp = new SeansPresenter(dodajSeansTab.view, getWidzHolder());
+            LogowaniePresenter lp = new LogowaniePresenter(logowanieTab.view, getWidzHolder());
+            
+            lp.modelProperty().addListener(new ChangeListener() {
+                @Override
+                public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                    if(widzHolder.get().value != null && widzHolder.get().value.getRola() == Rola.WIDZ)
+                        tabPane.getTabs().addAll( repertuarTab);
+                    else
+                        tabPane.getTabs().addAll(dodajSeansTab, dodajFilmTab, repertuarTab);
+                }
+            });
+        }                    
         
         public void handle(KeyEvent e) {
-                // Consume event jeśli nie litera
-                String str = e.getCharacter();
-                int len = str.length();
-                for(int i = 0; i < len; i++) {
-                        Character c = str.charAt(i);
-                        if (!Character.isLetter(c)) {
-                                e.consume();
-                        }
-                }
+            // Consume event jeśli nie litera
+            String str = e.getCharacter();
+            int len = str.length();
+            for(int i = 0; i < len; i++) {
+                    Character c = str.charAt(i);
+                    if (!Character.isLetter(c)) {
+                            e.consume();
+                    }
+            }
         }
         public void handleNumbers(KeyEvent e) {
-                // Consume event jeśli nie cyfra
-                String str = e.getCharacter();
-                int len = str.length();
-                for(int i = 0; i < len; i++) {
-                        Character c = str.charAt(i);
-                        if (!Character.isDigit(c)) {
-                                e.consume();
-                        }
-                }                
+            // Consume event jeśli nie cyfra
+            String str = e.getCharacter();
+            int len = str.length();
+            for(int i = 0; i < len; i++) {
+                    Character c = str.charAt(i);
+                    if (!Character.isDigit(c)) {
+                            e.consume();
+                    }
+            }                
         }
 
         public void focusChanged(ObservableValue<? extends Node> value,
-                                 Node oldNode, Node newNode) {
-                // Focus has changed to a new node
-                String toolTipText = (String)newNode.getProperties().get("toolTipText");
-                 
-                if (toolTipText != null && toolTipText.trim().length() > 0)  {
-                        helpText.setText(toolTipText);
-                        helpText.setVisible(true);
- 
-                        // Position the help text node
-                        double x = newNode.getLayoutX() + newNode.getLayoutBounds().getWidth()+10;
-//                                   newNode.getLayoutBounds().getMinX() -
-  //                                 helpText.getLayoutBounds().getMinX();
-                        double y = newNode.getLayoutY();// +
-//                                   newNode.getLayoutBounds().getMinY() +
+           Node oldNode, Node newNode) {
+            // Focus has changed to a new node
+            String toolTipText = (String)newNode.getProperties().get("toolTipText");
+
+            if (toolTipText != null && toolTipText.trim().length() > 0)  {
+                    helpText.setText(toolTipText);
+                    helpText.setVisible(true);
+
+                    // Position the help text node
+                    double x = newNode.getLayoutX() + newNode.getLayoutBounds().getWidth()+10;
+ //                                   newNode.getLayoutBounds().getMinX() -
+ //                                 helpText.getLayoutBounds().getMinX();
+                    double y = newNode.getLayoutY();// +
+ //                                   newNode.getLayoutBounds().getMinY() +
  //                                  newNode.getLayoutBounds().getHeight() -
  //                                  helpText.getLayoutBounds().getMinX();
- 
-                        helpText.setLayoutX(x);
-                        helpText.setLayoutY(y);
-                        helpText.setWrappingWidth(newNode.getLayoutBounds().getWidth());
-                }
-                else {
-                        helpText.setVisible(false);
-                }
-        }              
-                
 
+                    helpText.setLayoutX(x);
+                    helpText.setLayoutY(y);
+                    helpText.setWrappingWidth(newNode.getLayoutBounds().getWidth());
+            }
+            else {
+                    helpText.setVisible(false);
+            }
+        }              
 
     /**
      * @param args the command line arguments

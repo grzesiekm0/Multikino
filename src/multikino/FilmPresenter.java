@@ -7,6 +7,7 @@ package multikino;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import javax.xml.ws.Holder;
 import multikino.Film.PEGI;
 import multikino.helper.FilmTableUtil;
 
@@ -18,8 +19,10 @@ public class FilmPresenter {
 
     Film model;
     final DodajFilmView view;
-    public FilmPresenter(DodajFilmView view) {
+    Holder<Widz> widzHolder = null;
+    public FilmPresenter(DodajFilmView view, Holder<Widz> widzHolder) {
         this.view = view;
+        this.widzHolder = widzHolder;
         model = new Film();
         attachEvents();
         bindFieldsToModel();

@@ -15,6 +15,7 @@ import java.util.List;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javax.xml.ws.Holder;
 import multikino.helper.FilmTableUtil;
 import multikino.helper.SeansFilmowyTableUtil;
 
@@ -24,9 +25,12 @@ import multikino.helper.SeansFilmowyTableUtil;
 public class SeansPresenter {
     SeansFilmowy model;
     final DodajSeansView view;
-    public SeansPresenter(DodajSeansView view) {
+    Holder<Widz> widzHolder = null;
+    
+    public SeansPresenter(DodajSeansView view, Holder<Widz> widzHolder) {
         this.view = view;
         model = new SeansFilmowy();
+        this.widzHolder = widzHolder;
         attachEvents();
         bindFieldsToModel();
     }
