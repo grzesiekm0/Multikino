@@ -33,7 +33,7 @@ public class BuyTicketButtonTableCell<S> extends TableCell<S, Button>  {
         
         this.btKupBilet.setOnAction((ActionEvent e) -> {
             function.apply(getCurrentItem());
-            btKupBilet.setDisable(true);
+            //btKupBilet.setDisable(true);
             btKupBilet.setCursor(Cursor.CLOSED_HAND);
         });
         this.btKupBilet.setMaxWidth(Double.MAX_VALUE);

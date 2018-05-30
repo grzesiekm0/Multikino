@@ -6,37 +6,26 @@
 package multikino;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableMap;
-import javafx.event.EventHandler;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javax.xml.ws.Holder;
 import multikino.Widz.Rola;
+import multikino.helper.ActorTableUtil;
+import multikino.helper.FilmTableUtil;
+import multikino.helper.SeansFilmowyTableUtil;
+import multikino.helper.WidzUtil;
 
 /**
- *
- * @author 
+ * Główna klasa aplikacji. Inicjuje podstawowe klasy widoku i predzentacji oraz silnik bazodanowy
+ * 
  */
 public class Multikino extends Application {
         private Text helpText = new Text();
@@ -57,6 +46,7 @@ public class Multikino extends Application {
         
         @Override
         public void start(Stage stage) {
+            
 /*
                 TextField fName = new TextField();
                 TextField lName = new TextField();
@@ -94,13 +84,34 @@ public class Multikino extends Application {
 
 */
 
+            //* * * * * * INIT * * * * * * *
+            //1. Wczytaj dane z bazy
+            //2. aktualizuj id autoinkrementacji
+            
+            for(Widz w : WidzUtil.getWidzList()) {
+                if(Widz.ID < w.getWidzId())
+                    Widz.ID = w.getWidzId()+1;
+            }
+            for(Film f : FilmTableUtil.getFilmList()) {
+                if(Film.ID < f.getId())
+                    Film.ID = f.getId()+1;
+            }
+            for(Aktor a : ActorTableUtil.getActorList() ) {
+                if(Aktor.ID < a.getId())
+                    Aktor.ID = a.getId()+1;
+            }
+            for(SeansFilmowy s : SeansFilmowyTableUtil.getSeansList() ) {
+                if(SeansFilmowy.ID < s.getSeansId())
+                    SeansFilmowy.ID = s.getSeansId()+1;
+            }
+            //* * * * * * * * * * * * * * * * 
             setWidzHolder(new Holder<>());
             TabPane tabPane = new TabPane();
             //wyłączamy możliwość zamykania zakładek
             tabPane.tabClosingPolicyProperty().set(TabPane.TabClosingPolicy.UNAVAILABLE);
             RejestracjaTab rejestracjaTab = new RejestracjaTab();
             LogowanieTab logowanieTab = new LogowanieTab();
-            RepertuarTab repertuarTab = new RepertuarTab();
+            RepertuarTab repertuarTab = new RepertuarTab(widzHolder.get());
             DodajFilmTab dodajFilmTab = new DodajFilmTab();
             DodajSeansTab dodajSeansTab = new DodajSeansTab();
 
@@ -139,10 +150,16 @@ public class Multikino extends Application {
             lp.modelProperty().addListener(new ChangeListener() {
                 @Override
                 public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                    if(widzHolder.get().value != null && widzHolder.get().value.getRola() == Rola.WIDZ)
-                        tabPane.getTabs().addAll( repertuarTab);
-                    else
-                        tabPane.getTabs().addAll(dodajSeansTab, dodajFilmTab, repertuarTab);
+                    if(widzHolder.get().value != null && widzHolder.get().value.getRola() == Rola.WIDZ) {
+                        stage.setTitle("Witaj " + widzHolder.get().value.getFirstName());
+                        tabPane.getTabs().clear();
+                        tabPane.getTabs().addAll(logowanieTab, rejestracjaTab, repertuarTab);
+                    }
+                    else {
+                        stage.setTitle("Witaj pracowniku " + widzHolder.get().value.getFirstName());
+                        tabPane.getTabs().clear();
+                        tabPane.getTabs().addAll(logowanieTab, rejestracjaTab, dodajSeansTab, dodajFilmTab, repertuarTab);
+                    }
                 }
             });
         }                    
@@ -206,59 +223,3 @@ public class Multikino extends Application {
     
 }
 
-class ShowAndWaitApp  {
-       protected static int counter = 0;
-       protected Stage lastOpenStage;
-
-       public static void strt() {
-        Application.launch();
-    }
-        
-       
-       public void start() {
-    
-       }
-        
-       public void open(int stageNumber) {
-               Stage stage = new Stage();
-               stage.setTitle("#" + stageNumber);
- 
-               Button sayHelloButton = new Button("Say Hello");
-               sayHelloButton.setOnAction(
-                      e -> { System.out.println("Hello from #" + stageNumber);
-                            showAlert();
-                      });
- 
-               Button openButton = new Button("Open");
-               openButton.setOnAction(e -> open(++counter));
-                
-               VBox root = new VBox();
-               root.getChildren().addAll(sayHelloButton, openButton);
-               Scene scene = new Scene(root, 200, 200);
-               stage.setScene(scene);
-               stage.setX(50);
-               stage.setY(50);
-               this.lastOpenStage = stage;
-               
-               System.out.println("Before stage.showAndWait(): " + stageNumber);
-                
-               // Show the stage and wait for it to close
-               stage.showAndWait();
-                
-               System.out.println("After stage.showAndWait(): " + stageNumber);
-       }
-       
-       
-       protected void showAlert() {
-            Stage s = new Stage(StageStyle.UTILITY);
-            //s.initModality(Modality.WINDOW_MODAL);
-
-            Label msgLabel = new Label("This is an FX alert!");
-            Group root = new Group(msgLabel);
-            Scene scene = new Scene(root);
-            s.setScene(scene);
-
-            s.setTitle("FX Alert");
-            s.show();
-        }
-}

@@ -8,6 +8,7 @@ package multikino;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
+import javax.xml.ws.Holder;
 
 /**
  *
@@ -15,10 +16,12 @@ import javafx.scene.layout.GridPane;
  */
 public class RepertuarTab extends Tab {
     RepertuarView view;
-    public RepertuarTab() {
+    private Holder<Widz> widzHolder;
+    public RepertuarTab(Holder<Widz> widzHolder) {
             super();
+            this.widzHolder =  widzHolder;
             setText("Repertuar");
-            view = new RepertuarView();
+            view = new RepertuarView(widzHolder);
             Node root = view;
             setContent(root);
             setClosable(false);

@@ -48,6 +48,9 @@ public class Film implements Dane{
         PEGI(int pg) {
             peg = pg;
         }
+        public int ageCheck() {
+            return peg;
+        }
         public static PEGI getPeg(int peg) {
             switch(peg) {
                 case 0:
@@ -87,6 +90,10 @@ public class Film implements Dane{
                     break;
             }
             return str;
+        }
+
+        boolean ageCheck(int years) {
+            return peg >= years?true:false;
         }
             
         

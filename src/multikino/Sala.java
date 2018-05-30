@@ -27,9 +27,18 @@ import javafx.beans.property.StringProperty;
 public class Sala {
 
 
-    List<Bilet> reserveSeats(Widz value, SeansFilmowy sf, int ticketNo, float sum, int discIndex) {
-        sf.getSala().reserveSeats(ticketNo, sum, discIndex);
-
+    public synchronized List<Bilet>  reserveSeats(Widz widz, SeansFilmowy sf, int ticketNo, float sum, int discIndex) {
+        List<Bilet> biletyList = new LinkedList<>();
+        
+        int i =0;
+        for(int j = 0; i < ticketNo && j < seatCount.get(); j++) {
+            if(seats[j] == 0) {
+                biletyList.add(new Bilet(sf,widz,Discount.values()[discIndex], sum/ticketNo, j, this) );
+                i++;
+                seats[j] = widz.getWidzId();
+            }
+        }
+        return biletyList;
     }
 
     public enum Typ {

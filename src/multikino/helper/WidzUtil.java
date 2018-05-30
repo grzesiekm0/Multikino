@@ -6,8 +6,11 @@
 package multikino.helper;
 
 import java.time.LocalDate;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import multikino.Widz;
 import multikino.Widz.Rola;
 
@@ -21,12 +24,25 @@ public class WidzUtil {
         if(lista == null)
         {
           lista = FXCollections.<Widz>observableArrayList();
-          Widz w1 = new Widz("Mirek", "Kowalski", LocalDate.now().minusYears(39), Rola.WIDZ );
-          Widz w2 = new Widz("Ewa", "Kowalska", LocalDate.now().minusYears(67), Rola.PRACOWNIK );
-          Widz w3 = new Widz("Jan", "Nowak", LocalDate.now().minusYears(9), Rola.PRACOWNIK );
+          
+          Widz w1 = new Widz("Aleksandra", "Flis", LocalDate.now().minusYears(67), Rola.PRACOWNIK );
+          
 
-          lista.addAll(w1, w3,  w2);
+          lista.addAll(w1);
         }
         return lista;
     }  
+      
+    public static void showErrorDialog(String sError, String sTitle, String msg) {
+         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+         alert.setTitle(sTitle);
+         alert.setHeaderText(sError);
+         
+         alert.setContentText(msg);
+         alert.showAndWait().ifPresent(rs -> {
+             if (rs == ButtonType.OK) {
+                 System.out.println("OK.");
+             }
+         });
+     }    
 }

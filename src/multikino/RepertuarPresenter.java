@@ -34,6 +34,7 @@ import javax.xml.ws.Holder;
 import jdk.nashorn.internal.runtime.regexp.joni.encoding.IntHolder;
 import multikino.helper.BuyTicketButtonTableCell;
 import multikino.helper.SeansFilmowyTableUtil;
+import multikino.helper.WidzUtil;
 import org.omg.CORBA.FloatHolder;
 
 /**
@@ -145,7 +146,7 @@ public class RepertuarPresenter {
             multi.set(1.0f);
             ticketNo.set(1);
             cena.set(10.0f);
-            op = cena.multiply(ticketNo.multiply(multi));
+            
             
             
             
@@ -180,10 +181,15 @@ public class RepertuarPresenter {
                     };
             
                 List<String> errorList = new ArrayList<String>(10);
-                   cena.set(sf.getPrice());
-                   NumberBinding nb = op.multiply(sf.getSala().typ.val());
+                       
+                    totalPrice.unbind();
+                    
+                    cena.set(sf.getPrice());
                    
-                   totalPrice.bind( nb.add(sf.getSala().okulary3DProperty()) );
+                    op = cena.multiply(ticketNo.multiply(multi));
+                    NumberBinding nb = op.multiply(sf.getSala().typ.val());
+                   
+                    totalPrice.bind( nb.add(sf.getSala().okulary3DProperty().multiply(ticketNo)) );
                    
                     if(!sf.buyTicketTest(errorList))
                     {
@@ -264,12 +270,26 @@ public class RepertuarPresenter {
                         btBuy.setOnAction( e->{
                             try {
                                 int ticketCount = Integer.parseInt(txtTicketNo.getText());
+                                if(widzHolder.value.checkAge((Film.PEGI) sf.pegiProperty().get()))
+                                {
+                                    WidzUtil.showErrorDialog("Twój wiek nie pozwala na oglądanie tego filmu (:", 
+                                            "Zakupy wycofane", 
+                                            "Niestety film ma kategorię wiekową: "+  sf.pegiProperty().get().toString());
+                                    Window    wnd = dlg.getDialogPane().getScene().getWindow();
+                                    wnd.hide();
+                                    return;
+                                }
+                                    
                                 synchronized(sf.getSala()) {
-                                    if(ticketCount < 0 || sf.getSala().getFreeSeats() < ticketCount) {
+                                    
+                                    if( sf.getSala().getFreeSeats() >= ticketCount) {
                                         kupBilety(sf, ticketNo.get(), totalPrice.get(), cbDiscounts.getSelectionModel().getSelectedIndex());
-                                        Window    wnd = dlg.getDialogPane().getScene().getWindow();
-                                        wnd.hide();
                                     }
+                                    else {
+                                        WidzUtil.showErrorDialog("Nie ma już tylu wolnych miejsc.", "Zakupy wycofane", "liczba dostepnych miejsc: " + sf.getSala().getFreeSeats());
+                                    }
+                                    Window    wnd = dlg.getDialogPane().getScene().getWindow();
+                                    wnd.hide();
                                 }//synchronized
                             }
                             catch(NumberFormatException ne) {
@@ -370,6 +390,29 @@ public class RepertuarPresenter {
     }
 
     private void kupBilety(SeansFilmowy sf, int ticketNo, float sum, int selectedIndex) {
-        
+        List<Bilet> listaFree = null, lista = null;
+        if(ticketNo <= 0 ) {
+            WidzUtil.showErrorDialog("Trzeba zamówić choć 1 bilet.", "Zakupy wycofane", "Pole liczba biletów musi zawierac przynajmniej 1 bilet.");
+            return;
+        }
+            
+        if(chkKartaWidza.isSelected()) {
+                sum -= sum/ticketNo;
+                ticketNo--;
+                listaFree = sf.getSala().reserveSeats(widzHolder.value, sf, 1, 0.0f, selectedIndex);
+        }        
+        if(ticketNo > 0) {
+            lista = sf.getSala().reserveSeats(widzHolder.value, sf, ticketNo, sum, selectedIndex);
+        }
+        if(listaFree != null) {
+            if(lista == null) 
+                lista = listaFree;
+            else {      //dodaj darmówkę
+                lista.addAll(listaFree);
+            }
+        }
+        widzHolder.value.addTickets(lista);
+       
     }
+
 }

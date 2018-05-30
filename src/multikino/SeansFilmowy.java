@@ -25,7 +25,7 @@ import javafx.beans.property.StringProperty;
  */
 public class SeansFilmowy {
 
-    private static int sID = 1;
+    public static int ID = 1;
     private final ReadOnlyIntegerWrapper seansId = new ReadOnlyIntegerWrapper();
     private final ObjectProperty<Film> film = new ReadOnlyObjectWrapper<>();
     private final ObjectProperty<Sala> sala = new SimpleObjectProperty<>();
@@ -39,7 +39,7 @@ public class SeansFilmowy {
     }
 
     SeansFilmowy() {
-        seansId.set(sID++);
+        seansId.set(ID++);
     }
     public String getCena() {
         return cena.get();
@@ -56,7 +56,7 @@ public class SeansFilmowy {
     public SeansFilmowy(Film f, Sala s, LocalDateTime tmStart, int iPrice) {
         film.set(f);
         sala.set(s);
-        seansId.set(sID++);
+        seansId.set(ID++);
         startFilmu.set(tmStart);
         this.iPrice = iPrice;
         

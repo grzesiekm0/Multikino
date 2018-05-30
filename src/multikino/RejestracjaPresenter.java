@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.xml.ws.Holder;
+import multikino.helper.WidzUtil;
 
 
 /**
@@ -139,6 +140,8 @@ public class RejestracjaPresenter {
                         this.showError(errorList);
                 }
                 else {
+                    model.rejestracja(LocalDate.now());
+                    WidzUtil.getWidzList().add(model);
                     //TODO: Zapisz w modelu danych
                 }
         }

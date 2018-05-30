@@ -16,7 +16,10 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import multikino.KartaWidza.Okres;
+import multikino.helper.BiletTableUtil;
 
 /**
  *
@@ -25,7 +28,9 @@ import multikino.KartaWidza.Okres;
 public class Widz implements Dane{
     
         private KartaWidza kw = new KartaWidza(Okres.DNI30, LocalDate.now());   //null;
-
+        //data założenia konta
+        private LocalDate dataRejestracji = null;
+        private ObservableList<Bilet> bilety = null;
         public KartaWidza getKw() {
             return kw;
         }
@@ -33,6 +38,16 @@ public class Widz implements Dane{
         public void setKw(KartaWidza kw) {
             this.kw = kw;
         }
+
+    void addTickets(List<Bilet> lista) {
+        if(lista == null)
+            return;
+        bilety.addAll(lista);       //dodaj nowe bilety
+    }
+
+    void rejestracja(LocalDate now) {
+        dataRejestracji = now;
+    }
     
         public enum Rola {
             WIDZ,
@@ -47,7 +62,7 @@ public class Widz implements Dane{
         public enum KategoriaWiekowa {NIEMOWLE, DZIECKO, NASTOLATEK, DOROSLY, SENIOR, BRAK };
  
         private final ReadOnlyIntegerWrapper id =
-                new ReadOnlyIntegerWrapper(this, "widzId", ++widzSeq);
+                new ReadOnlyIntegerWrapper(this, "widzId", ++ID);
         private final StringProperty sImie =
                  new SimpleStringProperty(this, "firstName", null);
         private final StringProperty sNazwisko =
@@ -60,7 +75,7 @@ public class Widz implements Dane{
         private final StringProperty sPass =
                  new SimpleStringProperty(this, "pass", null);
         
-        private static int widzSeq = 0; 
+        public static int ID = 0; 
         //karta widza
         private final IntegerProperty cardId = new ReadOnlyIntegerWrapper();
 
@@ -97,7 +112,8 @@ public class Widz implements Dane{
             this.sImie.set(firstName);
             this.sNazwisko.set(lastName);
             this.dataUr.set(birthDate);
-            
+            bilety = BiletTableUtil.getBiletyList();
+            bilety.clear();
         }
 
         public Widz(String firstName, String lastName, LocalDate birthDate, Rola rola)
@@ -106,6 +122,8 @@ public class Widz implements Dane{
             this.sNazwisko.set(lastName);
             this.dataUr.set(birthDate);
             this.rola = rola;
+            bilety = BiletTableUtil.getBiletyList();
+            bilety.clear();
         }
 
     /**
@@ -306,6 +324,14 @@ public class Widz implements Dane{
                 }
         }
 
+
+        public boolean checkAge(Film.PEGI peg) {
+            
+                 
+                int years = (int)ChronoUnit.YEARS.between(dataUr.get(), LocalDate.now());
+                return peg.ageCheck(years);
+        }
+
     /**
      * Zapisuje obiekt widza (podczas tworzenia/modyfikacji w wybranym źródle danych.
      * @param errorList
@@ -350,5 +376,8 @@ public class Widz implements Dane{
             ", imie = " + sImie.get() +
             ", nazwisko = " + sNazwisko.get() +
             ", data urodzenia = " + dataUr.get() + " ]";
+    }
+    ObservableList<Bilet> getBiletList() {
+        return bilety;
     }
 }

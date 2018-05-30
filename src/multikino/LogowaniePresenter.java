@@ -10,6 +10,7 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javax.xml.ws.Holder;
+import multikino.helper.BiletTableUtil;
 import multikino.helper.WidzUtil;
 
 /**
@@ -85,10 +86,13 @@ public class LogowaniePresenter {
                     //ZALOGOWANY
                     widzHolder.value = widz;
                     model.set( widz );
+                    //usuń bilety kogoś wcześniej
+                    BiletTableUtil.bilety.clear();
                     return true;
                     
                 }
             }
+            WidzUtil.showErrorDialog("Błąd podczas logowania", "Błąd podczas logowania", "Login albo hasło są niepoprawne");
             return bRet;
         }
         

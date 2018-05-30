@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javax.xml.ws.Holder;
+import multikino.helper.BiletTableUtil;
 import multikino.helper.SeansFilmowyTableUtil;
 
 /**
@@ -23,7 +25,10 @@ public class RepertuarView extends VBox {
 
     TableColumn actionCol = new TableColumn("Bilety");
     TableView<SeansFilmowy> tabela = new TableView<>(SeansFilmowyTableUtil.getSeansList());
-    public RepertuarView() {
+    private final Holder<Widz> widzHolder;
+    
+    public RepertuarView( Holder<Widz> widzHolder) {
+        this.widzHolder = widzHolder;
         layoutForm();
     }
 
@@ -31,8 +36,9 @@ public class RepertuarView extends VBox {
         
         TitledPane searchPane = getSearchPane();
         TitledPane repertuarPane = getRepertuarPane();
+        TitledPane biletyPane = getBiletyPane();
         Accordion root = new Accordion();
-        root.getPanes().addAll(searchPane, repertuarPane);
+        root.getPanes().addAll(searchPane, repertuarPane, biletyPane);
         this.getChildren().add(root);
         root.setExpandedPane(repertuarPane);
     }
@@ -88,5 +94,46 @@ public class RepertuarView extends VBox {
                 TitledPane repertuarPane = new TitledPane("Aktualnie grane", pane);
                 return repertuarPane;
         }
+        
+       public TitledPane getBiletyPane() {
+                StackPane pane = new StackPane();
+                TableView<Bilet> tabelaBilet = null;
+                
+                tabelaBilet = new TableView<>(BiletTableUtil.getBiletyList());
+               
+               TableColumn<Bilet, String> filmCol = new TableColumn<>("Film");
+                filmCol.getColumns().addAll(
+                        BiletTableUtil.getTitleColumn(), 
+                        BiletTableUtil.getCzasTrwaniaColumn(),
+                        BiletTableUtil.getPEGIColumn());
+ 
+                TableColumn<Bilet, String> salaCol = new TableColumn<>("Sala");
+                salaCol.getColumns().addAll(
+                        BiletTableUtil.getSalaColumn(),
+                        BiletTableUtil.getSeatNrColumn());
+                
+                
+                
+                
+                tabelaBilet.getColumns().addAll(
+                    BiletTableUtil.getGodzinaColumn(),
+                    salaCol,
+                    filmCol,
+                    BiletTableUtil.getCenaColumn(),
+                    BiletTableUtil.getDiscColumn()
+                );
+//                        SeansFilmowyTableUtil.getGodzinaColumn(),
+//                        SeansFilmowyTableUtil.getSalaColumn(),
+//                        SeansFilmowyTableUtil.getCenaColumn(),
+//                        filmCol);
 
+                tabelaBilet.setPlaceholder(new Label("Brak biletów."));
+                
+                
+                pane.getChildren().add(tabelaBilet);
+                tabelaBilet.positionInArea(pane, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, USE_PREF_SIZE, Insets.EMPTY, HPos.CENTER, VPos.CENTER, true);
+
+                TitledPane repertuarPane = new TitledPane("Twoje bilety", pane);
+                return repertuarPane;
+        }
 }
